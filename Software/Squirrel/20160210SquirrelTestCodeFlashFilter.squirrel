@@ -1,0 +1,129 @@
+
+class OptoDataFilter
+{
+  INIT_0_1_THRESHOLD = 1500;
+  curLevel = -1;
+  lastSample = 0;
+  EDGE_DETECT_THRESHOLD = 1000;
+  EDGE_HIGH_SAMPLE_COUNT = 9;
+  EDGE_LOW_SAMPLE_COUNT = 4;
+  sampleCtr = 0;
+  lastEdgeCtr = 0;
+  maxFlashLikelihood = 3;
+  flashLikelihood = 0;
+    
+  function PutSample(sample)
+  {
+    if (curLevel == -1)
+    {
+      curLevel = sample > INIT_0_1_THRESHOLD ? 1 : 0;
+      lastSample = sample;
+    }
+    local diff = sample - lastSample;
+    lastSample = sample;
+    if (math.abs(diff) > EDGE_DETECT_THRESHOLD)
+    {
+      local thisEdgeCount = sampleCtr - lastEdgeCtr;
+      local testEdgeCount = (diff > 0) ? EDGE_LOW_SAMPLE_COUNT : EDGE_HIGH_SAMPLE_COUNT;
+      if ((thisEdgeCount >= testEdgeCount - 1) && (thisEdgeCount <= testEdgeCount + 1))
+      {
+        if (flashLikelihood < maxFlashLikelihood)
+        {
+          flashLikelihood += 1;
+        }
+        curLevel = diff > 0 ? 1 : 0;
+      }
+      else
+      {
+        if (flashLikelihood > 0)
+        {
+          flashLikelihood -= 1;
+        }
+      }
+      lastEdgeCtr = sampleCtr;
+    }
+    else
+    {
+      if ((sampleCtr - lastEdgeCtr) > (EDGE_HIGH_SAMPLE_COUNT + EDGE_LOW_SAMPLE_COUNT))
+      {
+        if (flashLikelihood > 0)
+        {
+          flashLikelihood -= 1;
+        }
+        sampleCtr = 0;
+        lastEdgeCtr = sampleCtr;
+      }
+    }
+    sampleCtr += 1;
+  }
+  
+  function GetFlashLikelihood()
+  {
+    return flashLikelihood;
+  }
+  
+  function GetLevel()
+  {
+    return curLevel;
+  }
+}
+
+// Red LED (on bread maker start button) detector pin
+redLedinput <- hardware.pin7;
+redLedinput.configure(ANALOG_IN);
+
+// Lid open detector pin
+lidDetectinput <- hardware.pin8;
+lidDetectinput.configure(ANALOG_IN);
+
+// Secs of data to record
+local secsOfData = 5;
+local tickRatePerSec = 10;
+local detectLedBlob = blob(secsOfData*tickRatePerSec*2);
+local detectLidBlob = blob(secsOfData*tickRatePerSec*2);
+
+local sampCtr = 0;
+local logStr = "";
+
+// Filter
+local filter = OptoDataFilter();
+
+function tick()
+{
+  local curVal = redLedinput.read();
+  filter.PutSample(curVal);
+  detectLedBlob.writen(curVal, 'w');
+
+  local lidVal = lidDetectinput.read();
+  
+  logStr += curVal + ", " + filter.GetFlashLikelihood() + ", " + filter.GetLevel() + ", " + lidVal + "\r\n";
+  sampCtr++;
+  if (sampCtr >= 20)
+  {
+    server.log(logStr);  
+    logStr = "";
+    sampCtr = 0;
+  }
+  // if (detectLedBlob.eos())
+  // {
+  //   detectLedBlob.seek(0);
+  //   local ledStr = "";
+  //   for (local i = 0; i < secsOfData*tickRatePerSec; i++)
+  //   {
+  //     local ledVal = detectLedBlob.readn('w');
+  //     ledStr += ledVal + ",";
+  //   }
+  //   detectLedBlob.seek(0);
+
+  //   server.log(ledStr);
+    
+  // }
+
+//  local curVal <- lidDetectinput.read();
+
+  // Tick again repeatedly
+  imp.wakeup(0.1, tick);
+}
+
+// start the loop
+tick();

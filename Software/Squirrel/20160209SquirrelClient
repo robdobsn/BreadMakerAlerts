@@ -1,0 +1,335 @@
+TEST_MODE <- true;
+
+// Two servo motors - control push buttons on bread maker
+servoMenu <- hardware.pin2;
+servoStart <- hardware.pin5;
+
+// configure servo pin to be a digital output
+servoMenu.configure(PWM_OUT, 0.02, 0.085);
+servoStart.configure(PWM_OUT, 0.02, 0.085);
+
+// Settings for servo positions
+servoMenuOnVal <- 0.05;
+servoMenuOffVal <- 0.09;
+servoStartOnVal <- 0.107;
+servoStartOffVal <- 0.06;
+
+// Set initial servo positions
+servoMenu.write(servoMenuOffVal);
+servoStart.write(servoStartOffVal);
+
+// Red LED (on bread maker start button) detector pin
+redLedinput <- hardware.pin7;
+redLedinput.configure(ANALOG_IN);
+
+// Lid open detector pin
+lidDetectinput <- hardware.pin8;
+lidDetectinput.configure(ANALOG_IN);
+
+// create a global variable to store current
+// state of the LED
+state <- 0.04;
+logCtr <- 0;
+
+// Red LED
+ledOnThreshold <- 1250;
+ledSampleCount <- 0;
+ledSampleMax <- 40;
+ledSampleOn <- 0;
+ledStateOff <- 0;
+ledStateBlink <- 1;
+ledStateOn <- 2;
+ledCurState <- ledStateOff;
+ledStrs <- [ "off", "flash", "on" ];
+ledLastRead <- 0;
+
+// Lid open/closed
+lidOpenThreshold <- 4500;
+lidSampleCount <- 0;
+lidSampleMax <- 10;
+lidSampleOn <- 0;
+lidStateClosed <- 1;
+lidStateOpen <- 0;
+lidCurState <- lidStateClosed;
+lidStrs <- [ "open", "closed" ]
+lidLastRead <- 0;
+
+buttonReleaseTimer <- 0;
+buttonReleaseTimerInterval <- 30; // 5 secs at 100ms tick
+
+buttonToReleaseMenu <- 0;
+buttonToReleaseStart <- 1;
+buttonToRelease <- buttonToReleaseMenu;
+
+secondsCount <- 0;
+
+stateMcIdle <- 0;
+stateMcPending <- 1;
+stateMcStart <- 2;
+stateMcMakeBread <- 3;
+stateMcBreadReady <- 4;
+stateMcBreadCooking <- 5;
+stateMcSecsInState <- 0;
+stateMcCurState <- stateMcIdle;
+stateMcStrings <- ["Idle", "WaitingToStart", "StartPressed", "MakingBread", "BreadReady", "Cooking"]
+
+stateMcGeneralTimeoutSecs <- 10;
+stateMcResetTimeSecs <- 24 * 60 * 60;
+stateMcAlertMaybeCookedSecs <- 1800;
+
+breadMcEndHour <- 7;
+breadMcEndMinute <- 0;
+breadMcDoughProgMins <- 140;
+breadMcDoughProgMinsLessAbit <- breadMcDoughProgMins - 10;
+if (TEST_MODE)
+{
+  breadMcDoughProgMins = 1;
+  breadMcDoughProgMinsLessAbit = 0;
+}
+breadMcStartTimeOfDay <- ((breadMcEndHour * 60 + breadMcEndMinute) - breadMcDoughProgMins);
+breadMcStartHour <- (breadMcStartTimeOfDay/60).tointeger();
+breadMcStartMin <- (breadMcStartTimeOfDay%60).tointeger();
+
+TEST_CURSTATE_PENDING <- TEST_MODE;
+
+function pressStart()
+{
+  buttonToRelease = buttonToReleaseStart;
+  buttonReleaseTimer = buttonReleaseTimerInterval;
+  servoStart.write(servoStartOnVal);
+  server.log("Press start button");
+}
+
+function pressMenu()
+{
+  buttonToRelease = buttonToReleaseMenu;
+  buttonReleaseTimer = buttonReleaseTimerInterval
+  servoMenu.write(servoMenuOnVal);
+  server.log("Press menu button");
+}
+
+function handleButtonRelease()
+{
+  // Check release timer
+  if (buttonReleaseTimer == 0)
+    return;
+    
+  // Dec timer
+  buttonReleaseTimer--;
+  if (buttonReleaseTimer == 0)
+  {
+    if (buttonToRelease == buttonToReleaseMenu)
+    {
+      servoMenu.write(servoMenuOffVal);
+      server.log("Release menu button");
+    }
+    else
+    {
+      servoStart.write(servoStartOffVal);
+      server.log("Release start button");
+    }
+  }
+}
+
+function detectRedLedState()
+{
+  // Check current state
+  curVal <- redLedinput.read();
+  ledLastRead = curVal;
+  if (curVal > ledOnThreshold)
+    ledSampleOn++;
+  ledSampleCount++;
+  if (ledSampleCount >= ledSampleMax)
+  {
+    if (ledSampleOn == 0)
+      ledCurState = ledStateOff;
+    else if (ledSampleOn == ledSampleMax)
+      ledCurState = ledStateOn;
+    else
+      ledCurState = ledStateBlink;
+    ledSampleCount = 0;
+    ledSampleOn = 0;
+  }
+}
+
+function detectLidOpenState()
+{
+  // Check current state
+  curVal <- lidDetectinput.read();
+  lidLastRead = curVal;
+  if (curVal > lidOpenThreshold)
+    lidSampleOn++;
+  lidSampleCount++;
+  if (lidSampleCount >= lidSampleMax)
+  {
+    if (lidSampleOn <= (lidSampleMax / 2))
+      lidCurState = 0;
+    else
+      lidCurState = 1;
+//    server.log("Lid cur state " + lidCurState + ", curRead" + curVal);
+    lidSampleCount = 0;
+    lidSampleOn = 0;
+  }
+}
+
+function TESTblink() {
+ 
+  // write current state to led pin
+//  servoMenu.write(state);
+//  servoStart.write(state);
+
+  // invert the value of state:
+  // when state = 1, 1-1 = 0
+  // when state = 0, 1-0 = 1
+  state = state + 0.01;
+  if (state > 0.12)
+    state = 0.04;
+
+  // schedule imp to wakeup in .5 seconds and do it again. 
+  imp.wakeup(0.5, TESTblink);
+}
+
+
+function TESTmeasure()
+{
+//  server.log(redinput.read() + ", " + refinput.read());
+  
+  detectRedLedState();
+  handleButtonRelease();
+  imp.wakeup(0.1, TESTmeasure);    
+}
+
+function tick()
+{
+  // Count seconds
+  secondsCount++
+  if (secondsCount > 10)
+  {
+    secondsCount = 0;
+    stateMcSecsInState++;
+  }
+
+  // Service detection and switch release
+  detectRedLedState();
+  detectLidOpenState();
+  handleButtonRelease();
+  
+  // Check for state transitions
+  prevState <- stateMcCurState;
+  local dt = date(time(), 'l');
+  if (stateMcCurState == stateMcIdle)
+  {
+    if (ledCurState == ledStateBlink)
+    {
+      stateMcCurState = stateMcPending;
+      stateMcSecsInState = 0;
+      server.log("BreadMakePending");
+    }
+  }
+  else if (stateMcCurState == stateMcPending)
+  {
+    if (((dt.hour == breadMcStartHour) && (dt.min == breadMcStartMin)) ||
+        (TEST_CURSTATE_PENDING && (stateMcSecsInState > 10)))
+    {
+      pressStart();
+      server.log("Start button pressed");
+      stateMcCurState = stateMcStart;
+      stateMcSecsInState = 0;
+    }
+    else if (ledCurState == ledStateOff)
+    {
+      stateMcCurState = stateMcIdle;
+      stateMcSecsInState = 0;
+      server.log("Back to Idle - led off");
+    }
+    else if (ledCurState == ledStateOn)
+    {
+      stateMcCurState = stateMcMakeBread;
+      stateMcSecsInState = 0;
+      agent.send("Started", 0)
+      server.log("Bread Machine Has Started!!!");
+    }
+  }
+  else if (stateMcCurState == stateMcStart)
+  {
+    if (ledCurState == ledStateOn)
+    {
+      stateMcCurState = stateMcMakeBread;
+      stateMcSecsInState = 0;
+      agent.send("Started", 0)
+      server.log("Bread Machine Has Started!!!");
+    }
+    else if (stateMcSecsInState > stateMcGeneralTimeoutSecs)
+    {
+      stateMcCurState = stateMcIdle;
+      stateMcSecsInState = 0;
+      server.log("Back to Idle - timeout from Start state");
+    }
+  }
+  else if (stateMcCurState == stateMcMakeBread)
+  {
+    if ((ledCurState != ledStateOn) && (stateMcSecsInState < (breadMcDoughProgMinsLessAbit * 60)))
+    {
+      server.log("Error - was making bread - Led no longer on");
+      stateMcCurState = stateMcIdle;
+      stateMcSecsInState = 0;
+    }
+    else if (stateMcSecsInState > (breadMcDoughProgMins * 60))
+    {
+      agent.send("Ready", stateMcSecsInState)
+      server.log("Bread is Ready!!!!");
+      stateMcCurState = stateMcBreadReady;
+      stateMcSecsInState = 0;
+    }
+  }
+  else if (stateMcCurState == stateMcBreadReady)
+  {
+    if ((stateMcSecsInState > stateMcGeneralTimeoutSecs) && (lidCurState == lidStateOpen))
+    {
+        stateMcCurState = stateMcBreadCooking;
+        stateMcSecsInState = 0;
+        agent.send("StopLidOpened", 0)
+        server.log("Maybe cooking - ready alert stopped - lid opened!!!!");
+    }
+    else if (stateMcSecsInState > stateMcResetTimeSecs)
+    {
+        stateMcCurState = stateMcIdle;
+        stateMcSecsInState = 0;
+        agent.send("StopLidOpened", 0)
+        server.log("Timeout waiting for lid open - returning to idle");      
+    }
+/*    else if (ledCurState != ledStateOn)
+    {
+        stateMcCurState = stateMcIdle;
+        stateMcSecsInState = 0;
+        agent.send("StopLedNotOn", 0)
+        server.log("Alerts cancelled - led not on any more!!!");
+    } */
+  }
+  else if (stateMcCurState == stateMcBreadCooking)
+  {
+    if (stateMcSecsInState > stateMcAlertMaybeCookedSecs)
+    {
+        stateMcCurState = stateMcIdle;
+        stateMcSecsInState = 0;
+        agent.send("BreadMaybeCooked", 0)
+        server.log("Bread maybe cooked - returning to idle");
+    }
+  }
+
+  // Report current state
+  logCtr++;
+  if ((prevState != stateMcCurState) || (logCtr > 100))
+  {
+    server.log(stateMcStrings[stateMcCurState] + " " + ledStrs[ledCurState] + " (" + ledLastRead + ") " + lidStrs[lidCurState] + "(" + lidLastRead + ") start hh:mm " + breadMcStartHour + ":" + breadMcStartMin);
+    logCtr = 0;
+  }
+
+  // Tick again repeatedly
+  imp.wakeup(0.1, tick);
+}
+
+// start the loop
+//TESTblink();
+//TESTmeasure();
+tick();

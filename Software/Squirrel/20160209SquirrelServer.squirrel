@@ -1,0 +1,41 @@
+// Execute an HTTP PUT
+function HttpPut (url) 
+{
+  headers <- { "Content-Type": "text/plain" };
+  body <- "";
+  local request = http.put(url, headers, body);
+  local response = request.sendsync();
+  return response;
+}
+
+// handle Started message from device
+device.on("Started", function(secsInState) {
+}); 
+
+// handle Ready message from device
+device.on("Ready", function(secsInState) {
+    // Set alert
+    server.log("PUT http://dobson/me:5081/alert/start/BreadMaker/DoughReady")
+    HttpPut("http://dobson/me:5081/alert/start/BreadMaker/DoughReady");
+}); 
+
+// handle Ready message from device
+device.on("StopLidOpened", function(secsInState) {
+    // Set alert
+    server.log("PUT http://dobson/me:5081/alert/end/BreadMaker/all")
+    HttpPut("http://dobson/me:5081/alert/end/BreadMaker/all");
+}); 
+
+// handle Ready message from device
+device.on("StopLedNotOn", function(secsInState) {
+    // Set alert
+    server.log("PUT http://dobson/me:5081/alert/end/BreadMaker/all")
+    HttpPut("http://dobson/me:5081/alert/end/BreadMaker/all");
+}); 
+
+// handle Ready message from device
+device.on("BreadMaybeCooked", function(secsInState) {
+    // Set alert
+    server.log("PUT http://dobson/me:5081/alert/start/BreadMaker/MaybeCooked")
+    HttpPut("http://dobson/me:5081/alert/start/BreadMaker/MaybeCooked");
+}); 
