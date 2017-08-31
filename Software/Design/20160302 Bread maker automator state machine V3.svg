@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="20160302 Bread maker automator state machine V3.svg">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;">
+      <path
+         id="path3786"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="351.10284"
+     inkscape:cy="566.78865"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1832"
+     inkscape:window-height="1302"
+     inkscape:window-x="312"
+     inkscape:window-y="105"
+     inkscape:window-maximized="0"
+     showguides="true"
+     inkscape:guide-bbox="true" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="opacity:0.11061946;fill:#00000a;fill-opacity:1;stroke:#000000;stroke-width:1.99999988;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2985"
+       width="75.06308"
+       height="48.858589"
+       x="67.214645"
+       y="159.80962"
+       rx="18.843384"
+       ry="18.843384" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       x="87.890717"
+       y="189.46547"
+       id="text2987"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan2989"
+         x="87.890717"
+         y="189.46547">Start</tspan></text>
+    <rect
+       ry="19.110601"
+       rx="8.1113691"
+       y="231.69785"
+       x="120.85226"
+       height="48.526974"
+       width="63.619789"
+       id="rect2993"
+       style="opacity:0.11061946;fill:#00000a;fill-opacity:1;stroke:#000000;stroke-width:1.32146394;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text2995"
+       y="259.89883"
+       x="141.93622"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       xml:space="preserve"><tspan
+         y="259.89883"
+         x="141.93622"
+         sodipodi:role="line"
+         id="tspan2999">Idle</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-mid:none;marker-end:url(#Arrow1Lend)"
+       d="m 226.27417,467.48385 c -38.96574,28.09991 38.70447,62.92582 75.76143,92.93405"
+       id="path3009"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text4587"
+       y="412.43185"
+       x="355.07843"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       xml:space="preserve"><tspan
+         y="412.43185"
+         x="355.07843"
+         sodipodi:role="line"
+         id="tspan3117">Time for Start</tspan></text>
+    <rect
+       ry="11.852948"
+       rx="15.838914"
+       y="758.91669"
+       x="485.93658"
+       height="67.587059"
+       width="167.53271"
+       id="rect4603"
+       style="opacity:0.11061946;fill:#00000a;fill-opacity:1;stroke:#000000;stroke-width:1.4542762;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text4605"
+       y="787.19849"
+       x="501.55054"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       xml:space="preserve"><tspan
+         id="tspan4609"
+         y="787.19849"
+         x="501.55054"
+         sodipodi:role="line">Bread Ready</tspan><tspan
+         y="807.19849"
+         x="501.55054"
+         sodipodi:role="line"
+         id="tspan4836">(Raise ready alert)</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       id="path4611"
+       d="m 370.72598,642.24025 176.7767,111.11679"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-mid:none;marker-end:url(#Arrow1Lend)"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       x="477.30682"
+       y="687.1933"
+       id="text4613"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="477.30682"
+         y="687.1933"
+         id="tspan5640">Time elapsed in</tspan><tspan
+         sodipodi:role="line"
+         x="477.30682"
+         y="707.1933"
+         id="tspan3123">state &gt; BMS</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+       d="m 202.03052,751.33672 c 0,0 -235.365541,-220.21325 -71.72083,-464.67017"
+       id="path4623"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       x="211.6687"
+       y="358.8952"
+       id="text4613-1"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="211.6687"
+         y="358.8952"
+         id="tspan5432">Red Led not</tspan><tspan
+         sodipodi:role="line"
+         x="213.27808"
+         y="378.8952"
+         id="tspan3068">flashing </tspan><tspan
+         sodipodi:role="line"
+         x="211.6687"
+         y="398.8952"
+         id="tspan5430" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="459.61942"
+       y="472.53461"
+       id="text4830"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4832"
+         x="459.61942"
+         y="472.53461" /></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+       d="m 139.40105,206.8645 12.12183,24.24366"
+       id="path5440"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text5624"
+       y="68.980011"
+       x="75.266136"
+       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       xml:space="preserve"><tspan
+         y="68.980011"
+         x="75.266136"
+         sodipodi:role="line"
+         id="tspan5628">Bread Machine Automator - State Machine</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="77.781746"
+       y="98.778183"
+       id="text5632"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan5634" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       x="75.266136"
+       y="102.31504"
+       id="text5636"
+       sodipodi:linespacing="125%"><tspan
+         id="tspan5638"
+         sodipodi:role="line"
+         x="75.266136"
+         y="102.31504">Rob Dobson 2016/03/02, Version 3.0</tspan></text>
+    <rect
+       ry="18.843384"
+       rx="18.843386"
+       y="566.90106"
+       x="288.43808"
+       height="67.041336"
+       width="125.57072"
+       id="rect3029"
+       style="opacity:0.11061946;fill:#00000a;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3031"
+       y="595.27179"
+       x="351.04208"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       xml:space="preserve"><tspan
+         y="595.27179"
+         x="351.04208"
+         sodipodi:role="line"
+         id="tspan3039">Making Bread</tspan><tspan
+         y="615.27179"
+         x="351.04208"
+         sodipodi:role="line"
+         id="tspan3156">(Log event)</tspan></text>
+    <rect
+       ry="18.843384"
+       rx="18.843386"
+       y="395.17517"
+       x="206.61575"
+       height="67.041336"
+       width="125.57072"
+       id="rect3051"
+       style="opacity:0.11061946;fill:#00000a;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3053"
+       y="422.53564"
+       x="267.5105"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       xml:space="preserve"><tspan
+         id="tspan3057"
+         y="422.53564"
+         x="267.5105"
+         sodipodi:role="line">Bread Make</tspan><tspan
+         y="442.53564"
+         x="267.5105"
+         sodipodi:role="line"
+         id="tspan3061">Pending</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       id="path3063"
+       d="m 190.91884,283.63609 c 42.76167,3.35358 107.41513,27.12611 103.03555,102.02542"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-mid:none;marker-end:url(#Arrow1Lend)"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       x="286.67813"
+       y="489.20343"
+       id="text3065"
+       sodipodi:linespacing="125%"><tspan
+         id="tspan3069"
+         sodipodi:role="line"
+         x="286.67813"
+         y="489.20343">Red Led above LT</tspan><tspan
+         sodipodi:role="line"
+         x="286.67813"
+         y="509.20343"
+         id="tspan3048"> for time NS</tspan></text>
+    <rect
+       style="opacity:0.11061946;fill:#00000a;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3125"
+       width="125.57072"
+       height="67.041336"
+       x="471.2757"
+       y="394.16501"
+       rx="18.843386"
+       ry="18.843384" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       x="532.17041"
+       y="421.52548"
+       id="text3127"
+       sodipodi:linespacing="125%"><tspan
+         id="tspan3131"
+         sodipodi:role="line"
+         x="532.17041"
+         y="421.52548">Start</tspan><tspan
+         sodipodi:role="line"
+         x="532.17041"
+         y="441.52548"
+         id="tspan3135">Actuate Start</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-mid:none;marker-end:url(#Arrow1Lend)"
+       d="m 344.46203,425.05745 111.11678,10e-6"
+       id="path3137"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path3141"
+       d="m 461.63971,458.39249 c -80.46107,-2.98172 -95.80827,39.07844 -97.98479,96.97465"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-mid:none;marker-end:url(#Arrow1Lend)" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3050"
+       y="306.36584"
+       x="323.04361"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       xml:space="preserve"><tspan
+         id="tspan3054"
+         y="306.36584"
+         x="323.04361"
+         sodipodi:role="line">Red Led flashing</tspan><tspan
+         y="326.36584"
+         x="323.04361"
+         sodipodi:role="line"
+         id="tspan3058">at rate FR</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3060"
+       y="509.40652"
+       x="437.19086"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       xml:space="preserve"><tspan
+         y="509.40652"
+         x="437.19086"
+         sodipodi:role="line"
+         id="tspan3062">Red Led above LT</tspan><tspan
+         id="tspan3064"
+         y="529.40649"
+         x="437.19086"
+         sodipodi:role="line"> for time OS</tspan></text>
+    <path
+       sodipodi:nodetypes="cc"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-mid:none;marker-end:url(#Arrow1Lend)"
+       d="m 280.82242,382.63104 c 5.17673,-43.903 -84.72589,-58.33369 -100.00511,-89.90357"
+       id="path3066"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       x="428.68103"
+       y="626.58563"
+       id="text3070"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="428.68103"
+         y="626.58563"
+         id="tspan3074">Red Led below</tspan><tspan
+         sodipodi:role="line"
+         x="428.68103"
+         y="646.58563"
+         id="tspan3080">LT for time FS</tspan><tspan
+         sodipodi:role="line"
+         x="428.68103"
+         y="666.58563"
+         id="tspan3076" /></text>
+    <rect
+       style="opacity:0.11061946;fill:#00000a;fill-opacity:1;stroke:#000000;stroke-width:1.46494317;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3082"
+       width="167.52203"
+       height="68.58654"
+       x="148.55093"
+       y="756.90173"
+       rx="15.837905"
+       ry="12.028231" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       x="164.15958"
+       y="785.17822"
+       id="text3084"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="164.15958"
+         y="785.17822"
+         id="tspan3086">Bread Dealt With</tspan><tspan
+         id="tspan3090"
+         sodipodi:role="line"
+         x="164.15958"
+         y="805.17822">(Cancel ready alert)</tspan></text>
+    <path
+       sodipodi:nodetypes="cc"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-mid:none;marker-end:url(#Arrow1Lend)"
+       d="m 474.7717,813.96619 -150.51273,2e-5"
+       id="path3096"
+       inkscape:connector-curvature="0" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3098"
+       y="732.65161"
+       x="333.72675"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       xml:space="preserve"><tspan
+         id="tspan3100"
+         y="732.65161"
+         x="333.72675"
+         sodipodi:role="line">Red Led below</tspan><tspan
+         id="tspan3102"
+         y="752.65161"
+         x="333.72675"
+         sodipodi:role="line">LT for time FS</tspan><tspan
+         y="772.65161"
+         x="333.72675"
+         sodipodi:role="line"
+         id="tspan3106"
+         style="font-weight:bold;-inkscape-font-specification:Corbel Bold">OR </tspan><tspan
+         y="792.65161"
+         x="333.72675"
+         sodipodi:role="line"
+         style="font-weight:normal;-inkscape-font-specification:Corbel"
+         id="tspan3118">Lid open for time LS</tspan><tspan
+         id="tspan3104"
+         y="812.65161"
+         x="333.72675"
+         sodipodi:role="line"
+         style="font-weight:normal;-inkscape-font-specification:Corbel" /></text>
+    <path
+       sodipodi:nodetypes="cc"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-mid:none;marker-end:url(#Arrow1Lend)"
+       d="m 491.9443,385.66149 c -12.79672,-65.33679 78.12071,-62.77746 62.62945,2e-5"
+       id="path3122"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       x="520.02338"
+       y="303.33539"
+       id="text3124"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="520.02338"
+         y="303.33539"
+         id="tspan3128">Still in state after time</tspan><tspan
+         sodipodi:role="line"
+         x="520.02338"
+         y="323.33539"
+         id="tspan3132">ES and &lt; ER retries</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       id="path3134"
+       d="m 512.14734,470.51431 c 9.42664,82.14548 21.55218,38.2378 30.30458,92.93406"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-mid:none;marker-end:url(#Arrow1Lend)"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="opacity:0.11061946;fill:#00000a;fill-opacity:1;stroke:#000000;stroke-width:2.0389297;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3136"
+       width="130.58255"
+       height="67.002403"
+       x="531.9043"
+       y="566.92053"
+       rx="19.59547"
+       ry="18.832441" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       x="595.49902"
+       y="597.29211"
+       id="text3138"
+       sodipodi:linespacing="125%"><tspan
+         id="tspan3142"
+         sodipodi:role="line"
+         x="595.49902"
+         y="597.29211">Error State</tspan><tspan
+         sodipodi:role="line"
+         x="595.49902"
+         y="617.29211"
+         id="tspan3158">(Log/Alert event)</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3144"
+       y="489.20346"
+       x="600.83557"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       xml:space="preserve"><tspan
+         id="tspan3146"
+         y="489.20346"
+         x="600.83557"
+         sodipodi:role="line">Still in state after time</tspan><tspan
+         id="tspan3148"
+         y="509.20346"
+         x="600.83557"
+         sodipodi:role="line">ES and &gt;= ER retries</tspan></text>
+    <path
+       sodipodi:nodetypes="cc"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-mid:none;marker-end:url(#Arrow1Lend)"
+       d="M 667.71084,586.68185 C 801.38625,186.98457 419.55228,200.65557 195.96959,262.4229"
+       id="path3152"
+       inkscape:connector-curvature="0" />
+    <path
+       sodipodi:nodetypes="cc"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-mid:none;marker-end:url(#Arrow1Lend)"
+       d="m 424.26407,597.79354 96.97465,10e-6"
+       id="path3160"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="98.994949"
+       y="886.69714"
+       id="text3162"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3164"
+         x="98.994949"
+         y="886.69714" /></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3166"
+       y="551.83289"
+       x="185.66287"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       xml:space="preserve"><tspan
+         y="551.83289"
+         x="185.66287"
+         sodipodi:role="line"
+         id="tspan3168">Red Led above LT</tspan><tspan
+         id="tspan3170"
+         y="571.83289"
+         x="185.66287"
+         sodipodi:role="line"> for time NS</tspan></text>
+    <path
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0"
+       id="path3172"
+       d="m 149.50258,288.68685 c -131.899784,194.77508 -8.7727,347.78883 125.2589,323.24883"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-mid:none;marker-end:url(#Arrow1Lend)" />
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Corbel;-inkscape-font-specification:Corbel"
+       x="169.50043"
+       y="676.08167"
+       id="text3174"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="169.50043"
+         y="676.08167"
+         id="tspan3178">Always</tspan></text>
+  </g>
+</svg>

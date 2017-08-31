@@ -1,0 +1,860 @@
+local ticksPerSecond = 10.0;
+
+local redLedOnThreshold = 1500;
+local lidSensorOpenThreshold = 4500;
+
+class BreadMakerStateMC
+{
+  stateMcIdle = 0;
+  stateMcPending = 1;
+  stateMcStart = 2;
+  stateMcMakeBread = 3;
+  stateMcBreadReady = 4;
+  stateMcBreadDealt = 4;
+  stateMcErrorState = 6;
+  stateMcCurState = stateMcIdle;
+  stateMcStrings = ["Idle", "Pending", "Start", "Making", "Done", "Dealt", "Error"]
+  
+  stateMcStateEntered = 0;
+  
+  function changeState(newState, curTime)
+  {
+    stateMcCurState = stateMcPending;
+    stateMcStateEntered = curTime;
+    server.log("StateChg: " + f);
+  }
+  function update(curTime, redLedConstant, redLedFlashing, lidIsOpen)
+  {
+    // Check for state transitions
+    local prevState = stateMcCurState;
+//    local dt = date(time(), 'l');
+    
+    // Handle Idle state
+    if (stateMcCurState == stateMcIdle)
+    {
+      if (redLedFlashing)
+      {
+        changeState(stateMcPending);
+      }
+      if (redLedConstant)
+      {
+        stateMcCurState = stateMcPending;
+        stateMcStateEntered = curTime;
+        server.log("StateChg: Pending");
+      }
+    }
+    
+    // Handle Pending state
+    else if (stateMcCurState == stateMcPending)
+    {
+      if (((dt.hour == breadMcStartHour) && (dt.min == breadMcStartMin)) ||
+          (TEST_CURSTATE_PENDING && (stateMcSecsInState > 10)))
+      {
+        pressStart();
+        server.log("Start button pressed");
+        stateMcCurState = stateMcStart;
+        stateMcSecsInState = 0;
+      }
+      else if (ledCurState == ledStateOff)
+      {
+        stateMcCurState = stateMcIdle;
+        stateMcSecsInState = 0;
+        server.log("Back to Idle - led off");
+      }
+      else if (ledCurState == ledStateOn)
+      {
+        stateMcCurState = stateMcMakeBread;
+        stateMcSecsInState = 0;
+        agent.send("Started", 0)
+        server.log("Bread Machine Has Started!!!");
+      }
+    }
+    else if (stateMcCurState == stateMcStart)
+    {
+      if (ledCurState == ledStateOn)
+      {
+        stateMcCurState = stateMcMakeBread;
+        stateMcSecsInState = 0;
+        agent.send("Started", 0)
+        server.log("Bread Machine Has Started!!!");
+      }
+      else if (stateMcSecsInState > stateMcGeneralTimeoutSecs)
+      {
+        stateMcCurState = stateMcIdle;
+        stateMcSecsInState = 0;
+        server.log("Back to Idle - timeout from Start state");
+      }
+    }
+    else if (stateMcCurState == stateMcMakeBread)
+    {
+      if ((ledCurState != ledStateOn) && (stateMcSecsInState < (breadMcDoughProgMinsLessAbit * 60)))
+      {
+        server.log("Error - was making bread - Led no longer on");
+        stateMcCurState = stateMcIdle;
+        stateMcSecsInState = 0;
+      }
+      else if (stateMcSecsInState > (breadMcDoughProgMins * 60))
+      {
+        agent.send("Ready", stateMcSecsInState)
+        server.log("Bread is Ready!!!!");
+        stateMcCurState = stateMcBreadReady;
+        stateMcSecsInState = 0;
+      }
+    }
+    else if (stateMcCurState == stateMcBreadReady)
+    {
+      if ((stateMcSecsInState > stateMcGeneralTimeoutSecs) && (lidCurState == lidStateOpen))
+      {
+          stateMcCurState = stateMcBreadCooking;
+          stateMcSecsInState = 0;
+          agent.send("StopLidOpened", 0)
+          server.log("Maybe cooking - ready alert stopped - lid opened!!!!");
+      }
+      else if (stateMcSecsInState > stateMcResetTimeSecs)
+      {
+          stateMcCurState = stateMcIdle;
+          stateMcSecsInState = 0;
+          agent.send("StopLidOpened", 0)
+          server.log("Timeout waiting for lid open - returning to idle");      
+      }
+  /*    else if (ledCurState != ledStateOn)
+      {
+          stateMcCurState = stateMcIdle;
+          stateMcSecsInState = 0;
+          agent.send("StopLedNotOn", 0)
+          server.log("Alerts cancelled - led not on any more!!!");
+      } */
+    }
+    else if (stateMcCurState == stateMcBreadCooking)
+    {
+      if (stateMcSecsInState > stateMcAlertMaybeCookedSecs)
+      {
+          stateMcCurState = stateMcIdle;
+          stateMcSecsInState = 0;
+          agent.send("BreadMaybeCooked", 0)
+          server.log("Bread maybe cooked - returning to idle");
+      }
+    }
+  
+    // Report current state
+    logCtr++;
+    if ((prevState != stateMcCurState) || (logCtr > 100))
+    {
+      server.log(stateMcStrings[stateMcCurState] + " " + ledStrs[ledCurState] + " (" + ledLastRead + ") " + lidStrs[lidCurState] + "(" + lidLastRead + ") start hh:mm " + breadMcStartHour + ":" + breadMcStartMin);
+      logCtr = 0;
+    }
+
+  }
+}
+
+class SignalHysteresis
+{
+  curStateSet = false
+  curState = false
+  curHasChanged = false
+  timeStateSet = 0
+  trueToFalseSecs = 10
+  falseToTrueSecs = 10
+
+  function put(curTime, curValue)
+  {
+    // Handle initial state
+    if (!curStateSet)
+    {
+      curState = curValue;
+      curHasChanged = true;
+      curStateSet = true;
+      timeStateSet = curTime;
+    }
+    // Check if there has been a consistent alternate value for hysteresis period
+    else if (curValue != curState)
+    {
+      // Change of state - so see if this has been going on for a while
+      local hysteresisSecs = curState ? trueToFalseSecs : falseToTrueSecs;
+      if (curTime - timeStateSet > hysteresisSecs)
+      {
+        // It has been going on for a while so make the new state stick
+        curState = curValue;
+        curHasChanged = true;
+        timeStateSet = curTime;
+      }
+      else
+      {
+        curHasChanged = false;
+      }
+    }
+    else
+    {
+      // No change of state
+      curHasChanged = false;
+      timeStateSet = curTime;
+    }
+  }
+
+  function getValue()
+  {
+    return curState;
+  }
+
+  function hasChanged()
+  {
+    return curHasChanged;
+  }
+}
+        
+class FlashDetector
+{
+  curLevel = -1;
+  lastSample = 0;
+  EDGE_DETECT_THRESHOLD = 1000;
+  EDGE_HIGH_SAMPLE_COUNT = 9;
+  EDGE_LOW_SAMPLE_COUNT = 4;
+  sampleCtr = 0;
+  lastEdgeCtr = 0;
+  maxFlashLikelihood = 3;
+  flashLikelihood = 0;
+    
+  function put(sample)
+  {
+    if (curLevel == -1)
+    {
+      curLevel = sample > redLedOnThreshold ? 1 : 0;
+      lastSample = sample;
+    }
+    local diff = sample - lastSample;
+    lastSample = sample;
+    if (math.abs(diff) > EDGE_DETECT_THRESHOLD)
+    {
+      local thisEdgeCount = sampleCtr - lastEdgeCtr;
+      local testEdgeCount = (diff > 0) ? EDGE_LOW_SAMPLE_COUNT : EDGE_HIGH_SAMPLE_COUNT;
+      if ((thisEdgeCount >= testEdgeCount - 1) && (thisEdgeCount <= testEdgeCount + 1))
+      {
+        if (flashLikelihood < maxFlashLikelihood)
+        {
+          flashLikelihood += 1;
+        }
+        curLevel = diff > 0 ? 1 : 0;
+      }
+      else
+      {
+        if (flashLikelihood > 0)
+        {
+          flashLikelihood -= 1;
+        }
+      }
+      lastEdgeCtr = sampleCtr;
+    }
+    else
+    {
+      if ((sampleCtr - lastEdgeCtr) > (EDGE_HIGH_SAMPLE_COUNT + EDGE_LOW_SAMPLE_COUNT))
+      {
+        if (flashLikelihood > 0)
+        {
+          flashLikelihood -= 1;
+        }
+        sampleCtr = 0;
+        lastEdgeCtr = sampleCtr;
+      }
+    }
+    sampleCtr += 1;
+  }
+  
+  function getLikelihood()
+  {
+    return flashLikelihood;
+  }
+  
+  function getLevel()
+  {
+    return curLevel;
+  }
+}
+
+// Red LED (on bread maker start button) detector pin
+local redLedinput = hardware.pin7;
+redLedinput.configure(ANALOG_IN);
+
+// Lid open detector pin
+local lidDetectinput = hardware.pin8;
+lidDetectinput.configure(ANALOG_IN);
+
+// Filters
+local flashDetector = FlashDetector();
+local redLedFilter = SignalHysteresis();
+local lidOpenFilter = SignalHysteresis();
+
+// Time counter
+local timeCounter = 0;
+
+local testData = [
+  96, 
+64, 
+176, 
+208, 
+272, 
+384, 
+224, 
+336, 
+288, 
+208, 
+240, 
+240, 
+320, 
+256, 
+432, 
+400, 
+272, 
+240, 
+320, 
+336, 
+224, 
+256, 
+224, 
+256, 
+304, 
+192, 
+0, 
+160, 
+160, 
+96, 
+128, 
+144, 
+80, 
+2176, 
+2256, 
+2368, 
+2528, 
+2400, 
+2224, 
+2368, 
+2560, 
+256, 
+368, 
+224, 
+272, 
+208, 
+2224, 
+2528, 
+2368, 
+2544, 
+2272, 
+2304, 
+2464, 
+2336, 
+192, 
+208, 
+304, 
+208, 
+208, 
+2400, 
+2400, 
+2560, 
+2384, 
+2416, 
+2288, 
+2480, 
+2352, 
+256, 
+320, 
+192, 
+160, 
+320, 
+2512, 
+2224, 
+2608, 
+2400, 
+2400, 
+2368, 
+2256, 
+2368, 
+480, 
+192, 
+256, 
+240, 
+192, 
+2464, 
+2464, 
+2464, 
+2432, 
+2112, 
+2288, 
+2144, 
+2400, 
+2448, 
+144, 
+96, 
+144, 
+48, 
+2368, 
+2304, 
+2400, 
+2400, 
+2288, 
+2528, 
+2224, 
+2464, 
+2320, 
+304, 
+160, 
+224, 
+176, 
+1424, 
+2272, 
+2384, 
+192, 
+272, 
+320, 
+224, 
+368, 
+304, 
+256, 
+240, 
+288, 
+208, 
+240, 
+288, 
+208, 
+208, 
+288, 
+304, 
+144, 
+240, 
+208, 
+304, 
+208, 
+224, 
+208, 
+272, 
+288, 
+320, 
+288, 
+192, 
+256, 
+160, 
+336, 
+288, 
+208, 
+256, 
+400, 
+288, 
+128, 
+384, 
+192, 
+320, 
+208, 
+208, 
+208, 
+256, 
+416, 
+96, 
+240, 
+208, 
+352, 
+208, 
+256, 
+384, 
+208, 
+288, 
+256, 
+336, 
+256, 
+304, 
+224, 
+320, 
+208, 
+288, 
+192, 
+352, 
+224, 
+304, 
+176, 
+320, 
+272, 
+256, 
+384, 
+352, 
+192, 
+304, 
+240, 
+320, 
+304, 
+352, 
+272, 
+208, 
+240, 
+240, 
+352, 
+144, 
+384, 
+368, 
+208, 
+384, 
+192, 
+224, 
+224, 
+336, 
+240, 
+400, 
+160, 
+224, 
+240, 
+256, 
+336, 
+288, 
+304, 
+176, 
+160, 
+128, 
+192, 
+160, 
+96, 
+112, 
+2464, 
+2256, 
+2496, 
+2272, 
+2608, 
+2464, 
+2368, 
+2512, 
+128, 
+224, 
+272, 
+208, 
+256, 
+2432, 
+2448, 
+2528, 
+2752, 
+2896, 
+2432, 
+2768, 
+2704, 
+2992, 
+2576, 
+2304, 
+2304, 
+2496, 
+2384, 
+2448, 
+2304, 
+2240, 
+2624, 
+2352, 
+2464, 
+2384, 
+2400, 
+2576, 
+2560, 
+2416, 
+2576, 
+2624, 
+2576, 
+2432, 
+2256, 
+2608, 
+2384, 
+2272, 
+2576, 
+2400, 
+2432, 
+2576, 
+2352, 
+2480, 
+2400, 
+2400, 
+2512, 
+2448, 
+2592, 
+2480, 
+2432, 
+2464, 
+2416, 
+2448, 
+2432, 
+2560, 
+2496, 
+2400, 
+2576, 
+2320, 
+2560, 
+2448, 
+2496, 
+2320, 
+2592, 
+2304, 
+2480, 
+2368, 
+2576, 
+2432, 
+2512, 
+2464, 
+2512, 
+2416, 
+2304, 
+2672, 
+2576, 
+2592, 
+2448, 
+2528, 
+2432, 
+2464, 
+2208, 
+2384, 
+2304, 
+2544, 
+2448, 
+2416, 
+2400, 
+2576, 
+2384, 
+2496, 
+2592, 
+2656, 
+2352, 
+2432, 
+2464, 
+2432, 
+2496, 
+2336, 
+2432, 
+2512, 
+2464, 
+2400, 
+2496, 
+2512, 
+2592, 
+2384, 
+2464, 
+2592, 
+2336, 
+2384, 
+2560, 
+2448, 
+2144, 
+2496, 
+2432, 
+2352, 
+2624, 
+2448, 
+2432, 
+2432, 
+2448, 
+2496, 
+2336, 
+2656, 
+2368, 
+2528, 
+2272, 
+2272, 
+2432, 
+2432, 
+2576, 
+2416, 
+2496, 
+2480, 
+2480, 
+2464, 
+2352, 
+2464, 
+2480, 
+2464, 
+2432, 
+2464, 
+2496, 
+2320, 
+2496, 
+2464, 
+2560, 
+2304, 
+2448, 
+2432, 
+2464, 
+2384, 
+2560, 
+2464, 
+2464, 
+2608, 
+2400, 
+2464, 
+2432, 
+2576, 
+2240, 
+2624, 
+2624, 
+2512, 
+2480, 
+2560, 
+2592, 
+2512, 
+2304, 
+2528, 
+2432, 
+2256, 
+2384, 
+2672, 
+2256, 
+2560, 
+2720, 
+2272, 
+2560, 
+2352, 
+2464, 
+2464, 
+2304, 
+2640, 
+2432, 
+2448, 
+2336, 
+2576, 
+2400, 
+2464, 
+2384, 
+2464, 
+2608, 
+2368, 
+2560, 
+2400, 
+2528, 
+2432, 
+2464, 
+2464, 
+2512, 
+2448, 
+2624, 
+2432, 
+2400, 
+2448, 
+2384, 
+2560, 
+2528, 
+2288, 
+2576, 
+2336, 
+2560, 
+2400, 
+2432, 
+2480, 
+2304, 
+2592, 
+2304, 
+2576, 
+2480, 
+2448, 
+2496, 
+2480, 
+2448, 
+2496, 
+2480, 
+2480, 
+2400, 
+2640, 
+2368, 
+2432, 
+2624, 
+2272, 
+2304, 
+2336, 
+2272, 
+2448, 
+2496, 
+2448, 
+2464, 
+2368, 
+2512, 
+2400, 
+2496, 
+2432, 
+2320, 
+2496, 
+2496, 
+2448, 
+2432, 
+2432, 
+2496, 
+2288, 
+2432, 
+2512, 
+2592, 
+2464, 
+2432, 
+2464, 
+2496, 
+2608, 
+2592, 
+2272, 
+2640, 
+2304, 
+2480, 
+2288, 
+2464
+];  
+
+function tick()
+{
+  // Read red-LED sensor
+  // local redLedVal = redLedinput.read();
+  local redLedVal = 0;
+  if (timeCounter < testData.len())
+  {
+    redLedVal = testData[timeCounter];
+  }
+  else
+  {
+    return; // stop test
+  }
+  
+  // Time value
+  local curTime = timeCounter / ticksPerSecond;
+  
+  // Filter red LED data
+  flashDetector.put(redLedVal);
+  local redLedBool = redLedVal > redLedOnThreshold;
+  redLedFilter.put(curTime, redLedBool);
+
+  // Lid detect
+  local lidVal = lidDetectinput.read();
+  lidOpenFilter.put(curTime, lidVal > lidSensorOpenThreshold);
+
+  //if (timeCounter % 20 == 0)
+  {
+    server.log(redLedVal + "\t" + redLedBool + "\t" + redLedFilter.getValue() + "\t" + redLedFilter.hasChanged() + "\t" + flashDetector.getLikelihood());
+  }
+  
+  // Increment time counter
+  timeCounter++;
+  
+//   logStr += curVal + "%09" + filter.GetFlashLikelihood() + "%09" + filter.GetLevel() + "%09" + lidVal+ "%09";
+//   sampCtr++;
+//   if (sampCtr >= 20)
+//   {
+// //    server.log(logStr);
+//     server.log("logging " + lidVal);
+//     agent.send("log", logStr);
+//     logStr = "";
+//     sampCtr = 0;
+//   }
+  // if (detectLedBlob.eos())
+  // {
+  //   detectLedBlob.seek(0);
+  //   local ledStr = "";
+  //   for (local i = 0; i < secsOfData*tickRatePerSec; i++)
+  //   {
+  //     local ledVal = detectLedBlob.readn('w');
+  //     ledStr += ledVal + ",";
+  //   }
+  //   detectLedBlob.seek(0);
+
+  //   server.log(ledStr);
+    
+  // }
+
+//  local curVal <- lidDetectinput.read();
+
+  // Tick again repeatedly
+  imp.wakeup(0.1, tick);
+}
+
+// start the loop
+tick();
+
