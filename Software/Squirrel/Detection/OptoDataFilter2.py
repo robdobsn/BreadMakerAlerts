@@ -38,7 +38,7 @@ class OptoDataFilter2:
         self.sampleCtr += 1
         # print(sample, self.flashLikelihood, self.curValue)
 
-fin = open("../log/Breadmaker5.txt", "r")
+fin = open("../log/Breadmaker6.txt", "r")
 lins = fin.readlines()
 print("Read " + str(len(lins)) + " lines")
 startLedData = []
@@ -77,6 +77,6 @@ print("Found " + str(len(startLedData)) + "samples")
 
 import matplotlib.pyplot as plt
 plt.plot(startLedData, color="r")
-# plt.plot(lidLedData, color="b")
+plt.plot(lidLedData, color="b")
 plt.show()
 
